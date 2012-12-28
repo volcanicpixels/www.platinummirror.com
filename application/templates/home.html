@@ -1,0 +1,23 @@
+{% extends 'page.html' %}
+{% import 'imports/settings.html' as settings %}
+
+{% block title %}Home | {{ super() }}{% endblock title %}
+
+{% block parent_link_cntr %}
+{% endblock parent_link_cntr %}
+
+{% block page_heading_cntr %}
+	<h1 class="align-center home-title">
+		We create some great stuff on the web. Nuff said!
+	</h1>
+{% endblock page_heading_cntr %}
+
+{% block content_inner %}
+	<div class="vertical-padding-medium align-center">
+		<a class="vp-btn-landing-action with-icon ss-globe" href="http://www.volcanicpixels.com/">Go to Volcanic Pixels</a>
+		<a class="vp-btn-landing-action with-icon ss-users" href="{{ url_for('clients') }}">Some of our clients</a>
+	</div>
+{% endblock content_inner %}
+
+{% block service_info %}
+{% endblock service_info %}

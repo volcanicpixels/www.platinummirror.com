@@ -1,0 +1,95 @@
+{% extends 'page.html' %}
+{% import 'imports/settings.html' as settings %}
+{% import 'imports/api_docs.html' as api_docs %}
+
+{% block title %}API Documentation | {{ super() }}{% endblock title %}
+
+{% block page_heading %}
+	API Documentation
+{% endblock page_heading %}
+
+{% block footer_scripts %}
+	{{ super() }}
+	<script src="{{ settings.asset_domain }}/js/prism.js"></script>
+	<script src="{{ settings.asset_domain }}/js/jquery.sticky.js"></script>
+{% endblock footer_scripts %}
+
+{% block stylesheets %}
+	{{ super() }}
+	<link rel="stylesheet" href="{{ settings.asset_domain }}/css/prism.css">
+{% endblock stylesheets %}
+
+{% block content_inner %}
+	<div class="vp-sidebar-padded">
+		<div class="vp-sidebar">
+			<div class="vp-sidebar-contents vp-sidebar-sticky">
+				<h3>Contents</h3>
+				{% for api_method in api %}
+					<p><a href="#{{ api_method.description | slugify }}" class="vp-sidebar-item">{{ api_method.description }}</a></p>
+				{% endfor %}
+			</div>
+		</div>
+		{% for api_method in api %}
+			<apimethod class="vp-api-method" >
+				<div id="{{ api_method.description | slugify }}" class="anchor-offset"></div>
+				<h3 class="vp-api-title"><a class="anchor" href="{{ request.path }}#{{ api_method.description | slugify }}"><i class="ss-icon">link</i></a>{{ api_method.description }}</h3>
+				{# Authentication #}
+				{{ api_docs.inline_note(api_method.deprecated,'warning','This method has been deprecated.')}}
+				{% if api_method.protected %}
+					<p class="vp-inline-special">
+						This method is protected and an api_key with the neccessary permissions is required to use it.
+					</p>
+				{% endif %}
+				{{ api_docs.inline_notes(api_method) }}
+				<dl>
+					
+					{# Url Structure #}
+					{% if api_method.resource is defined %}
+						<dt>URL Structure</dt>
+						<dd>
+							<pre><code class="language-javascript">{{ api_method.resource }}</code></pre>
+						</dd>
+					{% endif %}
+					{# HTTP method #}
+					{% if api_method.method is defined %}
+						<dt>Method</dt>
+						<dd>
+							<p>{{ api_method.method }}</p>
+						</dd>
+					{% endif %}
+					{# parameters #}
+					{% if api_method.parameters is defined %}
+						<dt>Parameters</dt>
+						{{ api_docs.inline_notes(api_method.parameters) }}
+						<dd>
+							{% for parameter in api_method.parameters %}
+							<p>
+								<strong>{{ parameter.name }}</strong> {% if parameter.required %}(required){% else %}(optional){% endif %}</br>
+								{{ api_docs.inline_notes(parameter) }}
+								{{ parameter.description }}
+							</p>
+							{% endfor %}
+						</dd>
+					{% endif %}
+					{# result #}
+					{% if api_method.result is defined %}
+						<dt>Returns</dt>
+						<dd>
+							<p>{{ api_method.result.description }}</p>
+							{{ api_docs.inline_notes(api_method.result) }}
+							{% if api_method.result.expected is string %}
+								<pre class="vp-code-box"><code class="prism language-javascript">{{ api_method.result.expected }}</code></pre>
+							{% elif api_method.result.expected is iterable %}
+								{% for code in api_method.result.expected %}
+									<pre class="vp-code-box"><code class="prism language-javascript">{{ code }}</code></pre>
+								{% endfor %}
+							{% endif %}
+						</dd>
+
+
+					{% endif %}
+				</dl>
+			</apimethod>
+		{% endfor %}
+	</div>
+{% endblock content_inner %}
