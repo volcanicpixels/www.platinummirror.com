@@ -17,6 +17,7 @@ app.config.from_object('application.settings')
 # app.register_blueprint(api.app, url_prefix='/api')
 
 import filters
+import tests
 
 
 if settings.PROFILER_ENABLED:

@@ -10,3 +10,11 @@
 {% set typekit_id = 'xds7tli' %}
 {% set asset_domain = 'http://assets.volcanicpixels.com' %}
 {% set canonical_domain = 'http://www.platinummirror.com' %}
+
+
+{% set google_analytics_id = 'UA-37572070-1' %}
+{% set google_site_verification = '4-wn9Vlle-_K8PUrjgh0JQjGWnr5ii7vJlfStJaI_xc' %}
+
+{% if request.url is secure() %}
+	{% set asset_domain = 'https://commondatastorage.googleapis.com/assets.volcanicpixels.com' %}
+{% endif %}
